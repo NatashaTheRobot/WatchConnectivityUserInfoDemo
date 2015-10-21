@@ -10,15 +10,13 @@ import WatchKit
 import Foundation
 
 
-class InterfaceController: WKInterfaceController {
+class InterfaceController: WKInterfaceController, DataSourceChangedDelegate {
     
     @IBOutlet var foodTable: WKInterfaceTable!
     
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
-        
-        // remove InterfaceController as a dataSourceChangedDelegate
-        // to prevent memory leaks
+
         WatchSessionManager.sharedManager.addDataSourceChangedDelegate(self)
         loadTableData(DataSource())
     }
@@ -30,16 +28,13 @@ class InterfaceController: WKInterfaceController {
         WatchSessionManager.sharedManager.removeDataSourceChangedDelegate(self)
         super.didDeactivate()
     }
-
-}
-
-// MARK: DataSourceUpdatedDelegate
-// update the food label once the data is changed!
-extension InterfaceController: DataSourceChangedDelegate {
     
+    // MARK: DataSourceUpdatedDelegate
+    // update the table once the data is changed!
     func dataSourceDidUpdate(dataSource: DataSource) {
         loadTableData(dataSource)
     }
+
 }
 
 private extension InterfaceController {
