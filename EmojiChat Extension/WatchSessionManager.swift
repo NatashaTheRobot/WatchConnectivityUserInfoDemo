@@ -52,9 +52,10 @@ extension WatchSessionManager {
     func session(session: WCSession, didReceiveUserInfo userInfo: [String : AnyObject]) {
         // handle receiving user info
         dispatch_async(dispatch_get_main_queue()) { [weak self] in
-            self?.dataSourceChangedDelegates.forEach {
-                if let dataSource = self?.dataSource.insertItemFromData(userInfo) {
-                    self?.dataSource = dataSource
+            
+            if let dataSource = self?.dataSource.insertItemFromData(userInfo) {
+                self?.dataSource = dataSource
+                self?.dataSourceChangedDelegates.forEach {
                     $0.dataSourceDidUpdate(dataSource)
                 }
             }
